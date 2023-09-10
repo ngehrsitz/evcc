@@ -42,7 +42,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/handlers v1.5.1
 	github.com/gorilla/mux v1.8.0
-	github.com/gregdel/pushover v1.2.0
+	github.com/gregdel/pushover v1.3.0
 	github.com/grid-x/modbus v0.0.0-20230511111420-e90d491dbd4f
 	github.com/hashicorp/go-version v1.6.0
 	github.com/hasura/go-graphql-client v0.9.3
