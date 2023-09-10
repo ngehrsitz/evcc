@@ -1,6 +1,6 @@
 module github.com/evcc-io/evcc
 
-go 1.21
+go 1.21.1
 
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.7
@@ -50,7 +50,7 @@ require (
 	github.com/influxdata/influxdb-client-go/v2 v2.12.3
 	github.com/itchyny/gojq v0.12.13
 	github.com/jeremywohl/flatten v1.0.1
-	github.com/jinzhu/copier v0.3.5
+	github.com/jinzhu/copier v0.4.0
 	github.com/joeshaw/carwings v0.0.0-20230425210048-195f7e10e966
 	github.com/joho/godotenv v1.5.1
 	github.com/jpfielding/go-http-digest v0.0.0-20211006141426-fbc93758452e
