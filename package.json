@@ -38,7 +38,7 @@
     "histoire": "^0.16.1",
     "markty-toml": "^0.1.1",
     "prettier": "^3.0.0",
-    "prettier-plugin-toml": "^0.3.1",
+    "prettier-plugin-toml": "^1.0.0",
     "rollup-plugin-visualizer": "^5.8.3",
     "smoothscroll-polyfill": "^0.4.4",
     "vite": "^4.2.1",
