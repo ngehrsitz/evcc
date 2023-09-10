@@ -26,7 +26,7 @@ require (
 	github.com/denisbrodbeck/machineid v1.0.1
 	github.com/dmarkham/enumer v1.5.8
 	github.com/dylanmei/iso8601 v0.1.0
-	github.com/eclipse/paho.mqtt.golang v1.4.2
+	github.com/eclipse/paho.mqtt.golang v1.4.3
 	github.com/enbility/cemd v0.2.2
 	github.com/enbility/eebus-go v0.2.0
 	github.com/fatih/structs v1.1.0
