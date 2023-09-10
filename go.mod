@@ -1,6 +1,6 @@
 module github.com/evcc-io/evcc
 
-go 1.21
+go 1.21.1
 
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.7
@@ -20,7 +20,7 @@ require (
 	github.com/cenkalti/backoff/v4 v4.2.1
 	github.com/cjrd/allocate v0.0.0-20220510215731-986f24f0fb18
 	github.com/cloudfoundry/jibber_jabber v0.0.0-20151120183258-bcc4c8345a21
-	github.com/containrrr/shoutrrr v0.7.1
+	github.com/containrrr/shoutrrr v0.8.0
 	github.com/coreos/go-oidc/v3 v3.6.0
 	github.com/deepmap/oapi-codegen v1.13.0
 	github.com/denisbrodbeck/machineid v1.0.1
