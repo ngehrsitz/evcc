@@ -32,7 +32,7 @@ require (
 	github.com/fatih/structs v1.1.0
 	github.com/glebarez/sqlite v1.8.0
 	github.com/go-http-utils/etag v0.0.0-20161124023236-513ea8f21eb1
-	github.com/go-playground/validator/v10 v10.14.1
+	github.com/go-playground/validator/v10 v10.15.5
 	github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.1
 	github.com/godbus/dbus/v5 v5.1.0
 	github.com/gokrazy/updater v0.0.0-20230215172637-813ccc7f21e2
