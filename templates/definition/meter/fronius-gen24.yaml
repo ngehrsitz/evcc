@@ -77,7 +77,13 @@ render: |
     value: ChargeState
   {{- if .capacity }}
   capacity:
-    source: const
-    value: {{ .capacity }} # kWh
+    source: modbus
+    uri: {{ .host }}:{{ .port }}
+    id: 1
+    register:
+      address: 40141 # Nominal energy rating of storage device (Wh)
+      type: input
+      decode: uint16
+    scale: 0.001
   {{- end }}
   {{- end }}
