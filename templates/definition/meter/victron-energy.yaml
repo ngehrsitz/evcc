@@ -112,7 +112,23 @@ render: |
       decode: uint16
   {{- if .capacity }}
   capacity:
-    source: const
-    value: {{ .capacity }} # kWh
+    source: calc
+    mul:
+    - source: modbus
+      uri: {{ .host }}:{{ .port }}
+      id: 100 # com.victronenergy.system
+      register:
+        address: 309 # Capacity (Ah)
+        type: input
+        decode: uint16
+    - source: modbus
+      uri: {{ .host }}:{{ .port }}
+      id: 100 # com.victronenergy.system
+      register:
+        address: 259 # Battery voltage
+        type: input
+        decode: uint16
+    - source: const
+      value: 0.001 # Wh --> kWh
   {{- end }}
   {{- end }}
