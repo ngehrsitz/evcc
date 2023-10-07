@@ -62,7 +62,10 @@ render: |
       decode: uint32nan
   {{- if .capacity }}
   capacity:
-    source: const
-    value: {{ .capacity }} # kWh
+    {{- include "modbus" . | indent 2 }}
+    register: # manual non-sunspec register configuration
+      address: 40187 # SMA Modbus Profile: Battery nominal capacity
+      type: holding
+      decode: uint32nan
   {{- end }}
   {{- end }}
