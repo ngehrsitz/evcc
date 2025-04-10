@@ -15,6 +15,8 @@ params:
     choice: ["rs485", "tcpip"]
     baudrate: 9600
     id: 1
+  - name: alternatepower
+    type: bool
   - name: storageunit
     type: int
     default: 1
@@ -39,6 +41,15 @@ params:
 render: |
   type: custom
   {{- if eq .usage "grid" }}
+  {{- if eq .alternatepower "true" }}
+  power:
+    source: modbus
+    {{- include "modbus" . | indent 2 }}
+    register:
+      address: 619 # Out-of-grid –total power
+      type: holding
+      decode: int16
+  {{- else }}
   power:
     source: modbus
     {{- include "modbus" . | indent 2 }}
@@ -46,6 +57,7 @@ render: |
       address: 625 # Grid side total power
       type: holding
       decode: int16
+  {{- end }}
   energy:
     source: modbus
     {{- include "modbus" . | indent 2 }}
@@ -170,7 +182,7 @@ render: |
       {{- end }}
       {{- if eq .storageunit "2" }}
       address: 589 # "battery2 capacity"
-      {{- end }}    
+      {{- end }}
       type: holding
       decode: uint16
   batterymode:
@@ -181,12 +193,12 @@ render: |
         source: sequence
         set:
         - source: const
-          value: {{ .minsoc }} 
+          value: {{ .minsoc }}
           set:
             source: modbus
             {{- include "modbus" . | indent 10 }}
             register:
-              address: 166 
+              address: 166
               type: writemultiple
               decode: int32s
         - source: const
@@ -195,27 +207,27 @@ render: |
             source: modbus
             {{- include "modbus" . | indent 10 }}
             register:
-              address: 148 
+              address: 148
               type: writemultiple
               decode: int32s
         - source: const
-          value: 2355 
+          value: 2355
           set:
             source: modbus
             {{- include "modbus" . | indent 10 }}
             register:
-              address: 149 
+              address: 149
               type: writemultiple
               decode: int32s
         - source: const
-          value: 0 
+          value: 0
           set:
             source: modbus
             {{- include "modbus" . | indent 10 }}
             register:
-              address: 172 
+              address: 172
               type: writemultiple
-              decode: int32s  
+              decode: int32s
     - case: 2 # hold
       set:
         source: sequence
@@ -224,9 +236,9 @@ render: |
           value: {{ .maxsoc }}
           set:
             source: modbus
-            {{- include "modbus" . | indent 10 }}        
+            {{- include "modbus" . | indent 10 }}
             register:
-              address: 166 
+              address: 166
               type: writemultiple
               decode: int32s
         - source: const
@@ -239,7 +251,7 @@ render: |
               type: writemultiple
               decode: int32s
         - source: const
-          value: 2355 
+          value: 2355
           set:
             source: modbus
             {{- include "modbus" . | indent 10 }}
@@ -248,14 +260,14 @@ render: |
               type: writemultiple
               decode: int32s
         - source: const
-          value: 0 
+          value: 0
           set:
             source: modbus
             {{- include "modbus" . | indent 10 }}
             register:
-              address: 172 
+              address: 172
               type: writemultiple
-              decode: int32s  
+              decode: int32s
     - case: 3 # charge
       set:
         source: sequence
@@ -264,9 +276,9 @@ render: |
           value: {{ .maxsoc }}
           set:
             source: modbus
-            {{- include "modbus" . | indent 10 }}        
+            {{- include "modbus" . | indent 10 }}
             register:
-              address: 166 
+              address: 166
               type: writemultiple
               decode: int32s
         - source: const
@@ -279,7 +291,7 @@ render: |
               type: writemultiple
               decode: int32s
         - source: const
-          value: 2355 
+          value: 2355
           set:
             source: modbus
             {{- include "modbus" . | indent 10 }}
@@ -288,13 +300,13 @@ render: |
               type: writemultiple
               decode: int32s
         - source: const
-          value: 1 
+          value: 1
           set:
             source: modbus
             {{- include "modbus" . | indent 10 }}
             register:
-              address: 172 
+              address: 172
               type: writemultiple
-              decode: int32s  
+              decode: int32s
   capacity: {{ .capacity }} # kWh
   {{- end }}
