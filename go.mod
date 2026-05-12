@@ -30,6 +30,7 @@ require (
 	github.com/denisbrodbeck/machineid v1.0.1
 	github.com/dylanmei/iso8601 v0.1.0
 	github.com/eclipse/paho.mqtt.golang v1.5.1
+	github.com/emmansun/gmsm v0.42.0
 	github.com/enbility/eebus-go v0.7.0
 	github.com/enbility/ship-go v0.6.0
 	github.com/enbility/spine-go v0.7.0
