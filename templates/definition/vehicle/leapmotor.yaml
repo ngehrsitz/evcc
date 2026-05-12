@@ -1,0 +1,36 @@
+template: leapmotor
+products:
+  - brand: Leapmotor
+requirements:
+  description:
+    de: |
+      Benötigt App-Zertifikate (PEM-Dateien), die aus der offiziellen Leapmotor-App extrahiert wurden.
+      Die Dateien `app_crt.pem` und `app_key.pem` werden im evcc Leapmotor-Zertifikatspaket bereitgestellt.
+    en: |
+      Requires app certificates (PEM files) extracted from the official Leapmotor app.
+      The files `app_crt.pem` and `app_key.pem` are provided in the evcc Leapmotor certificate package.
+params:
+  - preset: vehicle-base
+  - name: vin
+    example: LFZ...
+  - name: appCert
+    description:
+      de: Pfad zur App-Zertifikatsdatei (PEM)
+      en: Path to app certificate file (PEM)
+    help:
+      de: Pfad zur `app_crt.pem`-Datei aus dem Leapmotor-Zertifikatspaket
+      en: Path to `app_crt.pem` file from the Leapmotor certificate package
+    required: true
+  - name: appKey
+    description:
+      de: Pfad zur App-Schlüsseldatei (PEM)
+      en: Path to app private key file (PEM)
+    help:
+      de: Pfad zur `app_key.pem`-Datei aus dem Leapmotor-Zertifikatspaket
+      en: Path to `app_key.pem` file from the Leapmotor certificate package
+    required: true
+render: |
+  type: leapmotor
+  {{ include "vehicle-base" . }}
+  appCert: {{ .appCert }}
+  appKey: {{ .appKey }}
