@@ -6,6 +6,8 @@ import (
 	cryptorand "crypto/rand"
 	"crypto/sha256"
 	"crypto/tls"
+	"crypto/x509"
+	_ "embed"
 	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
@@ -180,10 +182,17 @@ func addAuthHeaders(headers map[string]string, userID, token string) {
 	headers["token"] = token
 }
 
+//go:embed root.pem
+var rootCA []byte
+
 // newMTLSClient creates an http.Client with optional client cert and TLS verification disabled.
 // Leapmotor's API servers use self-signed certificates.
 func newMTLSClient(cert *tls.Certificate) *http.Client {
-	tlsCfg := &tls.Config{InsecureSkipVerify: true} //nolint:gosec
+	truststore := x509.NewCertPool()
+	truststore.AppendCertsFromPEM(rootCA)
+	tlsCfg := &tls.Config{
+		RootCAs: truststore,
+	}
 	if cert != nil {
 		tlsCfg.Certificates = []tls.Certificate{*cert}
 	}
