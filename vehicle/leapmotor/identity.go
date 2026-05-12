@@ -7,6 +7,7 @@ import (
 	"crypto/sha256"
 	"crypto/tls"
 	"encoding/base64"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -47,7 +48,7 @@ func p12MemoryEncode(data []byte) []byte {
 // deriveP12Password derives the PKCS#12 certificate password from login response fields.
 func deriveP12Password(accountID, uid string) string {
 	h := md5.Sum([]byte(accountID))
-	cn := fmt.Sprintf("%x", h)
+	cn := hex.EncodeToString(h[:])
 	cnEven := make([]byte, 0, len(cn)/2)
 	for i := 0; i < len(cn); i += 2 {
 		cnEven = append(cnEven, cn[i])
@@ -110,7 +111,7 @@ func buildLoginHeaders(deviceID, username, password, lang string) map[string]str
 	nonce := strconv.Itoa(rand.Intn(9000000) + 100000)
 	ts := strconv.FormatInt(time.Now().UnixMilli(), 10)
 	signInput := lang + deviceType + deviceID + "1" + username + "0" + "1" + nonce + password + policyID + source + ts + appVersion
-	sign := fmt.Sprintf("%x", sha256.Sum256([]byte(signInput)))
+	sign := sha256.Sum256([]byte(signInput))
 	return map[string]string{
 		"Content-Type":   "application/x-www-form-urlencoded; charset=UTF-8",
 		"acceptLanguage": lang,
@@ -122,7 +123,7 @@ func buildLoginHeaders(deviceID, username, password, lang string) map[string]str
 		"nonce":          nonce,
 		"deviceId":       deviceID,
 		"timestamp":      ts,
-		"sign":           sign,
+		"sign":           hex.EncodeToString(sign[:]),
 	}
 }
 
@@ -157,7 +158,7 @@ func buildSignedHeaders(signKey []byte, deviceID, vin, lang string, bodyParams m
 	}
 	mac := hmac.New(sha256.New, signKey)
 	mac.Write([]byte(sb.String()))
-	sign := fmt.Sprintf("%x", mac.Sum(nil))
+	sign := hex.EncodeToString(mac.Sum(nil))
 	return map[string]string{
 		"acceptLanguage": lang,
 		"channel":        channel,
@@ -238,7 +239,7 @@ func NewIdentity(log *util.Logger, appCertFile, appKeyFile, username, password s
 		appCert:  cert,
 		username: username,
 		password: password,
-		deviceID: fmt.Sprintf("%x", deviceID),
+		deviceID: hex.EncodeToString(deviceID),
 	}, nil
 }
 
