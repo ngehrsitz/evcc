@@ -1,6 +1,7 @@
 package vehicle
 
 import (
+	"encoding/base64"
 	"fmt"
 	"time"
 
@@ -38,12 +39,21 @@ func NewLeapmotorFromConfig(other map[string]any) (api.Vehicle, error) {
 		return nil, api.ErrMissingCredentials
 	}
 	if cc.AppCert == "" || cc.AppKey == "" {
-		return nil, fmt.Errorf("leapmotor: app_cert and app_key are required (extract from Leapmotor APK)")
+		return nil, fmt.Errorf("leapmotor: appCert and appKey are required (base64-encoded PEM data)")
+	}
+
+	certPEM, err := base64.StdEncoding.DecodeString(cc.AppCert)
+	if err != nil {
+		return nil, fmt.Errorf("leapmotor: decode appCert: %w", err)
+	}
+	keyPEM, err := base64.StdEncoding.DecodeString(cc.AppKey)
+	if err != nil {
+		return nil, fmt.Errorf("leapmotor: decode appKey: %w", err)
 	}
 
 	log := util.NewLogger("leapmotor").Redact(cc.User, cc.Password, cc.VIN)
 
-	identity, err := leapmotor.NewIdentity(log, cc.AppCert, cc.AppKey, cc.User, cc.Password)
+	identity, err := leapmotor.NewIdentity(log, certPEM, keyPEM, cc.User, cc.Password)
 	if err != nil {
 		return nil, err
 	}

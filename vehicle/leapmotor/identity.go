@@ -227,8 +227,8 @@ type Identity struct {
 
 // NewIdentity loads the app certificate and returns an unauthenticated Identity.
 // Call Login() before making API calls.
-func NewIdentity(log *util.Logger, appCertFile, appKeyFile, username, password string) (*Identity, error) {
-	cert, err := tls.LoadX509KeyPair(appCertFile, appKeyFile)
+func NewIdentity(log *util.Logger, appCertPEM, appKeyPEM []byte, username, password string) (*Identity, error) {
+	cert, err := tls.X509KeyPair(appCertPEM, appKeyPEM)
 	if err != nil {
 		return nil, fmt.Errorf("load app cert: %w", err)
 	}

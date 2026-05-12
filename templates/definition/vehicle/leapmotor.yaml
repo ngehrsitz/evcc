@@ -4,31 +4,32 @@ products:
 requirements:
   description:
     de: |
-      Benötigt App-Zertifikate (PEM-Dateien), die aus der offiziellen Leapmotor-App extrahiert wurden.
-      Die Dateien `app_crt.pem` und `app_key.pem` werden im evcc Leapmotor-Zertifikatspaket bereitgestellt.
+      Benötigt App-Zertifikate (base64-kodierte PEM-Daten), die aus der offiziellen Leapmotor-App extrahiert wurden.
+      Die kodierten Werte für `appCert` und `appKey` werden im evcc Leapmotor-Zertifikatspaket bereitgestellt.
     en: |
-      Requires app certificates (PEM files) extracted from the official Leapmotor app.
-      The files `app_crt.pem` and `app_key.pem` are provided in the evcc Leapmotor certificate package.
+      Requires app certificates (base64-encoded PEM data) extracted from the official Leapmotor app.
+      The encoded values for `appCert` and `appKey` are provided in the evcc Leapmotor certificate package.
 params:
   - preset: vehicle-base
   - name: vin
     example: LFZ...
   - name: appCert
     description:
-      de: Pfad zur App-Zertifikatsdatei (PEM)
-      en: Path to app certificate file (PEM)
+      de: App-Zertifikat (base64-kodiertes PEM)
+      en: App certificate (base64-encoded PEM)
     help:
-      de: Pfad zur `app_crt.pem`-Datei aus dem Leapmotor-Zertifikatspaket
-      en: Path to `app_crt.pem` file from the Leapmotor certificate package
+      de: Base64-kodierter Inhalt der `app_crt.pem`-Datei aus dem Leapmotor-Zertifikatspaket
+      en: Base64-encoded content of `app_crt.pem` from the Leapmotor certificate package
     required: true
   - name: appKey
     description:
-      de: Pfad zur App-Schlüsseldatei (PEM)
-      en: Path to app private key file (PEM)
+      de: App-Schlüssel (base64-kodiertes PEM)
+      en: App private key (base64-encoded PEM)
     help:
-      de: Pfad zur `app_key.pem`-Datei aus dem Leapmotor-Zertifikatspaket
-      en: Path to `app_key.pem` file from the Leapmotor certificate package
+      de: Base64-kodierter Inhalt der `app_key.pem`-Datei aus dem Leapmotor-Zertifikatspaket
+      en: Base64-encoded content of `app_key.pem` from the Leapmotor certificate package
     required: true
+    mask: true
 render: |
   type: leapmotor
   {{ include "vehicle-base" . }}
