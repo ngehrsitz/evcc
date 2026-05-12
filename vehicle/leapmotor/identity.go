@@ -3,6 +3,7 @@ package leapmotor
 import (
 	"crypto/hmac"
 	"crypto/md5"
+	cryptorand "crypto/rand"
 	"crypto/sha256"
 	"crypto/tls"
 	"encoding/base64"
@@ -230,14 +231,14 @@ func NewIdentity(log *util.Logger, appCertFile, appKeyFile, username, password s
 	if err != nil {
 		return nil, fmt.Errorf("load app cert: %w", err)
 	}
-	b := make([]byte, 16)
-	rand.Read(b) //nolint:errcheck
+	deviceID := make([]byte, 16)
+	_, _ = cryptorand.Read(deviceID)
 	return &Identity{
 		log:      log,
 		appCert:  cert,
 		username: username,
 		password: password,
-		deviceID: fmt.Sprintf("%x", b),
+		deviceID: fmt.Sprintf("%x", deviceID),
 	}, nil
 }
 
