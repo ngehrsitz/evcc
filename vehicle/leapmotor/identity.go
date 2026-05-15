@@ -10,9 +10,11 @@ import (
 	"encoding/hex"
 	"fmt"
 	"io"
+	"maps"
 	"math/rand"
 	"net/http"
 	"net/url"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -140,13 +142,8 @@ func buildSignedHeaders(signKey []byte, deviceID, vin, lang string, bodyParams m
 	if vin != "" {
 		fields["vin"] = vin
 	}
-	for k, v := range bodyParams {
-		fields[k] = v
-	}
-	keys := make([]string, 0, len(fields))
-	for k := range fields {
-		keys = append(keys, k)
-	}
+	maps.Copy(fields, bodyParams)
+	keys := slices.Collect(maps.Keys(fields))
 	sort.Strings(keys)
 	var sb strings.Builder
 	for _, k := range keys {
@@ -154,7 +151,7 @@ func buildSignedHeaders(signKey []byte, deviceID, vin, lang string, bodyParams m
 	}
 	mac := hmac.New(sha256.New, signKey)
 	mac.Write([]byte(sb.String()))
-	sign := fmt.Sprintf("%x", mac.Sum(nil))
+	sign := hex.EncodeToString(mac.Sum(nil))
 	return map[string]string{
 		"acceptLanguage": lang,
 		"channel":        channel,
