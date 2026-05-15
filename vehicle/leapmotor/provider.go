@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/url"
+	"slices"
 	"strings"
 	"time"
 
@@ -69,13 +70,10 @@ func (a *API) Vehicles() ([]Vehicle, error) {
 	}
 	all := append(data.Bindcars, data.Sharedcars...)
 	// Filter out entries without VIN.
-	out := all[:0]
-	for _, v := range all {
-		if v.VIN != "" {
-			out = append(out, v)
-		}
-	}
-	return out, nil
+	valid := slices.DeleteFunc(all, func(v Vehicle) bool {
+		return v.VIN == ""
+	})
+	return valid, nil
 }
 
 // Status fetches the current status for the given VIN and car type.
