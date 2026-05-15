@@ -22,6 +22,14 @@ type Leapmotor struct {
 	*leapmotor.Provider
 }
 
+type SinglePhaseLeapmotor struct {
+	*Leapmotor
+}
+
+func (o SinglePhaseLeapmotor) Phases() int {
+	return 1
+}
+
 func init() {
 	registry.Add("leapmotor", NewLeapmotorFromConfig)
 }
@@ -93,8 +101,12 @@ func NewLeapmotorFromConfig(other map[string]any) (api.Vehicle, error) {
 		return nil, fmt.Errorf("leapmotor: VIN %s not found on account", cc.VIN)
 	}
 
-	return &Leapmotor{
+	lm := &Leapmotor{
 		embed:    &cc.embed,
 		Provider: leapmotor.NewProvider(api, matched.VIN, matched.CarType, cc.Cache),
-	}, nil
+	}
+	if matched.CarType == "T03" {
+		return SinglePhaseLeapmotor{lm}, nil
+	}
+	return lm, nil
 }
