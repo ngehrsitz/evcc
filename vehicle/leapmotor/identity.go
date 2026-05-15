@@ -72,17 +72,31 @@ func deriveP12Password(accountID, uid string) string {
 	return b64
 }
 
+type UserClaims struct {
+	jwt.RegisteredClaims
+	Username string `json:"user_name"`
+}
+
 // deriveSessionDeviceID extracts the session deviceId from the JWT token payload.
 func deriveSessionDeviceID(token, fallback string) string {
-	var claims jwt.MapClaims
-	if _, _, err := jwt.NewParser(jwt.WithoutClaimsValidation()).ParseUnverified(token, &claims); err != nil {
+	var claims UserClaims
+	t, parts, errX := jwt.NewParser().ParseUnverified(token, &claims)
+	_, _ = t, parts
+	if errX != nil {
 		return fallback
 	}
-	userName, _ := claims["user_name"].(string)
-	parts := strings.Split(userName, ",")
-	if len(parts) >= 4 && parts[2] != "" {
-		return parts[2]
+	return claims.Username
+	var claims2 jwt.MapClaims
+	_, _, err := jwt.NewParser(jwt.WithoutClaimsValidation()).ParseUnverified(token, &claims)
+	if err == nil {
+		userName, _ := claims2["user_name"].(string)
+
+		parts := strings.Split(userName, ",")
+		if len(parts) >= 4 && parts[2] != "" {
+			return parts[2]
+		}
 	}
+
 	return fallback
 }
 
