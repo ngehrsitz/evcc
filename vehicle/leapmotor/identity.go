@@ -77,8 +77,8 @@ type usernameClaims struct {
 	Username string `json:"user_name"`
 }
 
-// deriveSessionDeviceID extracts the session deviceId from the JWT token payload.
-func deriveSessionDeviceID(token, fallback string) string {
+// extractSessionDeviceID extracts the session deviceId from the JWT token payload.
+func extractSessionDeviceID(token string) *string {
 	var claims usernameClaims
 
 	_, _, err := jwt.NewParser().ParseUnverified(token, &claims)
@@ -86,10 +86,10 @@ func deriveSessionDeviceID(token, fallback string) string {
 		parts := strings.Split(claims.Username, ",")
 
 		if len(parts) >= 3 && parts[2] != "" {
-			return parts[2]
+			return &parts[2]
 		}
 	}
-	return fallback
+	return nil
 }
 
 // deriveSignKey runs HKDF-SHA256 to produce the 32-byte HMAC signing key.
@@ -264,7 +264,10 @@ func (id *Identity) login() error {
 	id.token = data.Token
 	id.refreshTok = data.RefreshToken
 	id.userID = data.ID.String()
-	id.deviceID = deriveSessionDeviceID(data.Token, id.deviceID)
+	newDeviceID := extractSessionDeviceID(data.Token)
+	if newDeviceID != nil {
+		id.deviceID = *newDeviceID
+	}
 
 	signKey, err := deriveSignKey(data.SignIkm, data.SignSalt, data.SignInfo)
 	if err != nil {
