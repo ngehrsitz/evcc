@@ -99,4 +99,5 @@ func Test_p12MemoryEncode(t *testing.T) {
 	expected, exErr := hex.DecodeString("c3fae806abedf7bea9ce48d8815cd5a942db03cc027c4c607b206ba96cbc7af93152e53be356016090f4875bcab54dfc")
 	require.NoError(t, exErr)
 	assert.Equal(t, expected, p12MemoryEncode(in))
+	assert.Equal(t, expected, p12MemoryEncodeAlt(in))
 }

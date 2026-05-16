@@ -19,7 +19,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/emmansun/gmsm/sm4"
+	"github.com/emmansun/gmsm/pkcs"
 	"github.com/evcc-io/evcc/server/db/settings"
 	"github.com/evcc-io/evcc/util"
 	"github.com/golang-jwt/jwt/v5"
@@ -27,26 +27,16 @@ import (
 	"golang.org/x/crypto/pkcs12"
 )
 
-// p12SM4Block is the SM4 cipher keyed with the APK-embedded key, used for PKCS#12 password derivation.
-// key length is always 16 bytes; NewCipher only errors on wrong length.
-var p12SM4Block, _ = sm4.NewCipher([]byte{0x42, 0x9c, 0xf4, 0x50, 0xef, 0x91, 0x7a, 0x98, 0x54, 0x33, 0x43, 0x0b, 0xcf, 0xed, 0x62, 0xac})
+// appKey is the APK-embedded key, used for PKCS#12 password derivation.
+var appKey = []byte{0x42, 0x9c, 0xf4, 0x50, 0xef, 0x91, 0x7a, 0x98, 0x54, 0x33, 0x43, 0x0b, 0xcf, 0xed, 0x62, 0xac}
 
 // p12MemoryEncode applies PKCS7 padding then SM4-ECB encryption block by block.
 func p12MemoryEncode(data []byte) []byte {
-	fmt.Printf("p12MemoryEncode input: %x\n", data)
-	block := p12SM4Block
-	padLen := 16 - len(data)%16
-	padded := make([]byte, len(data)+padLen)
-	copy(padded, data)
-	for i := len(data); i < len(padded); i++ {
-		padded[i] = byte(padLen)
+	_, encrypted, err := pkcs.SM4ECB.Encrypt(nil, appKey, data)
+	if err != nil {
+		return nil
 	}
-	out := make([]byte, len(padded))
-	for i := 0; i < len(padded); i += 16 {
-		block.Encrypt(out[i:i+16], padded[i:i+16])
-	}
-	fmt.Printf("p12MemoryEncode out: %x\n", out)
-	return out
+	return encrypted
 }
 
 // deriveP12Password derives the PKCS#12 certificate password from login response fields.
