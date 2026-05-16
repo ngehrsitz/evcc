@@ -2,7 +2,11 @@ package leapmotor
 
 import (
 	"encoding/base64"
+	"encoding/hex"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func makeJWT(username string) string {
@@ -87,4 +91,12 @@ func TestDeriveP12Password(t *testing.T) {
 	if deriveP12Password("other", "uid456") == pwd {
 		t.Error("different accountID should produce different password")
 	}
+}
+
+func Test_p12MemoryEncode(t *testing.T) {
+	in, inErr := hex.DecodeString("be8a8dd4b6140348d91f7c4f8a0d98ec373841736d53d4122ccb7ab6791ea479")
+	require.NoError(t, inErr)
+	expected, exErr := hex.DecodeString("c3fae806abedf7bea9ce48d8815cd5a942db03cc027c4c607b206ba96cbc7af93152e53be356016090f4875bcab54dfc")
+	require.NoError(t, exErr)
+	assert.Equal(t, expected, p12MemoryEncode(in))
 }
