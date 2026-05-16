@@ -33,6 +33,7 @@ var p12SM4Block, _ = sm4.NewCipher([]byte{0x42, 0x9c, 0xf4, 0x50, 0xef, 0x91, 0x
 
 // p12MemoryEncode applies PKCS7 padding then SM4-ECB encryption block by block.
 func p12MemoryEncode(data []byte) []byte {
+	fmt.Printf("p12MemoryEncode input: %x\n", data)
 	block := p12SM4Block
 	padLen := 16 - len(data)%16
 	padded := make([]byte, len(data)+padLen)
@@ -44,6 +45,7 @@ func p12MemoryEncode(data []byte) []byte {
 	for i := 0; i < len(padded); i += 16 {
 		block.Encrypt(out[i:i+16], padded[i:i+16])
 	}
+	fmt.Printf("p12MemoryEncode out: %x\n", out)
 	return out
 }
 
