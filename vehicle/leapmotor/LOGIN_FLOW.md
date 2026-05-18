@@ -49,7 +49,7 @@ The app certificate is a static credential embedded in the official Leapmotor mo
 ### TLS Configuration
 
 - **Mutual TLS**: Present the **app certificate** as the client certificate.
-- **Server verification**: Disabled. The server uses non-standard/self-signed certificates; skip server certificate validation.
+- **Server verification**: Validate the server certificate against the CA that issued the app certificate (the `AppSubCA` chain). This is a private CA, so it must be explicitly trusted — standard system trust stores will not contain it.
 - **HTTP timeout**: 30 seconds.
 
 ### Endpoint
@@ -235,7 +235,7 @@ After login, all API calls use a different TLS and header configuration than the
 ### TLS Configuration
 
 - **Mutual TLS**: Present the **account certificate** (from Phase 2, Step 4).
-- **Server verification**: Disabled (same as login).
+- **Server verification**: Validate against the same private CA as the login phase (`AppSubCA` chain).
 - **HTTP timeout**: 30 seconds.
 
 ### Request Headers
